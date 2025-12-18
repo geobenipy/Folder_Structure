@@ -12,18 +12,21 @@ from collections import defaultdict
 
 
 # Configuration
-TARGET_DIRECTORY =r"C:\Users\Beni Haimerl\Desktop\Python"  # Change this to your target directory path
+TARGET_DIRECTORY = r"L:\win\AG_Marine_Geophysics\beni\machine-learning"  # Change this to your target directory path
+EXCLUDED_DIRECTORIES = [".git", "__pycache__", "node_modules", ".venv", "venv", "Data", "Output", "Results", "doc", ".idea", "obsolete", "pyaid.egg-info", "pyaid-example", "pyaidrl", "pyaidrlbaselines"]  # Directories to skip
 
 
 class DirectoryScanner:
-    def __init__(self, root_path):
+    def __init__(self, root_path, excluded_dirs):
         self.root = Path(root_path).resolve()
+        self.excluded_dirs = set(excluded_dirs)
         self.stats = {
             'total_files': 0,
             'total_dirs': 0,
             'total_size': 0,
             'file_types': defaultdict(int),
-            'largest_files': []
+            'largest_files': [],
+            'skipped_dirs': 0
         }
         
     def get_size(self, path):
@@ -67,6 +70,11 @@ class DirectoryScanner:
                 print(f"{prefix}{connector}{entry.name} ({self.format_size(size)})")
                 
             elif entry.is_dir():
+                if entry.name in self.excluded_dirs:
+                    self.stats['skipped_dirs'] += 1
+                    print(f"{prefix}{connector}{entry.name}/ [SKIPPED]")
+                    continue
+                
                 self.stats['total_dirs'] += 1
                 print(f"{prefix}{connector}{entry.name}/")
                 self.scan_directory(entry, prefix + extension, is_final)
@@ -78,6 +86,9 @@ class DirectoryScanner:
         print(f"Total Directories: {self.stats['total_dirs']}")
         print(f"Total Files: {self.stats['total_files']}")
         print(f"Total Size: {self.format_size(self.stats['total_size'])}")
+        
+        if self.stats['skipped_dirs'] > 0:
+            print(f"Skipped Directories: {self.stats['skipped_dirs']}")
         
         if self.stats['file_types']:
             print(f"\nFile Type Distribution:")
@@ -113,7 +124,7 @@ class DirectoryScanner:
 
 
 def main():
-    scanner = DirectoryScanner(TARGET_DIRECTORY)
+    scanner = DirectoryScanner(TARGET_DIRECTORY, EXCLUDED_DIRECTORIES)
     scanner.run()
 
 
