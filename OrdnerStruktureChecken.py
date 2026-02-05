@@ -12,7 +12,7 @@ from collections import defaultdict
 
 
 # Configuration
-TARGET_DIRECTORY = r"L:\win\AG_Marine_Geophysics\beni\machine-learning"  # Change this to your target directory path
+TARGET_DIRECTORY = r"E:\Miscellaneous\Skripte&Tutorials\!!!Auf_GIT\Cluttergrams\New_Paper\code\qgis-plugin\Seismic_Scatter"  # Change this to your target directory path
 EXCLUDED_DIRECTORIES = [".git", "__pycache__", "node_modules", ".venv", "venv", "Data", "Output", "Results", "doc", ".idea", "obsolete", "pyaid.egg-info", "pyaid-example", "pyaidrl", "pyaidrlbaselines"]  # Directories to skip
 
 
